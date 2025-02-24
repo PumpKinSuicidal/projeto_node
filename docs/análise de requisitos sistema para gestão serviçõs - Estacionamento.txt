@@ -1,0 +1,18 @@
+1 - Cadastro de clientes
+Nome Completo
+Placa do veículo (Obrigatorio)
+Modelo e cor do veículo (Obrigatorio)
+telefone
+
+2 - Emissão da Ordem de Serviço
+Numero da OS (gerado automaticamente)
+Data e hora da abertura (gerado automaticamente)
+Numero da vaga (preenchido pelo manobrista)
+Observações do estado do veículo (ex.: arranhões, amassados)
+Dados do cadastro (puxar do cadastro)
+Data e hora de fechamento (gerado automaticamente)
+
+3. Relatórios:
+- Clientes
+- OS abertas
+- OS concluídas
