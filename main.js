@@ -1,6 +1,9 @@
 console.log("Processo principal")
 
-const { app, BrowserWindow, nativeTheme, Menu } = require('electron')
+const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
+
+// Esta linha está relacionada ao preload.js
+const path = require('node:path')
 
 // Janela principal
 let win
@@ -12,7 +15,11 @@ const createWindow = () => {
         height: 600,
         //autoHideMenuBar: true,
         //minimizable: false,
-        resizable: false
+        resizable: false,
+        //ativação do preload.js
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     // menu personalizado
@@ -44,6 +51,44 @@ function aboutWindow() {
     about.loadFile('./src/views/sobre.html')
 }
 
+// Janela cliente
+let client
+function clientWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        client = new BrowserWindow({
+            width: 1010,
+            height: 680,
+            //autoHideMenuBar: true,
+            resizable: false,
+            parent: main,
+            modal: true
+        })
+    }
+    client.loadFile('./src/views/cliente.html') 
+    client.center() //iniciar no centro da tela   
+}
+
+// Janela OS
+let os
+function osWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        os = new BrowserWindow({
+            width: 1010,
+            height: 720,
+           // autoHideMenuBar: true,
+            resizable: false,
+            parent: main,
+            modal: true
+        })
+    }
+    os.loadFile('./src/views/os.html')
+    os.center()
+}
+
 // Iniciar a aplicação
 app.whenReady().then(() => {
     createWindow()
@@ -70,10 +115,12 @@ const template = [
         label: 'Cadastro',
         submenu: [
             {
-                label: 'Clientes'
+                label: 'Clientes',
+                click: () => clientWindow()
             },
             {
-                label: 'OS'
+                label: 'OS',
+                click: () => osWindow()
             },
             {
                 type: 'separator'
@@ -137,3 +184,12 @@ const template = [
         ]
     }
 ]
+
+// recebimento dos pedidos do renderizador para abertura de janelas (botões) autorizado no preload.js
+ipcMain.on('client-window', () => {
+    clientWindow()
+})
+
+ipcMain.on('os-window', () => {
+    osWindow()
+})
