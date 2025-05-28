@@ -3,5 +3,5 @@
 # DripAuto
 Desenvolvimento de um sistema desktop para gestão de ordem de serviços de uma assistência técnica de computadores e notebooks.
 ## Autor
-Professor José de Assis
+Carlos Eduardo da Silva
 # projeto_node
