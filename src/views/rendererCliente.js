@@ -37,6 +37,14 @@ let arrayClient = []
 // a constante foco obtem o elemento html (input) identificado como 'searchClient'
 const foco = document.getElementById('searchClient')
 
+
+function teclaEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault()
+        buscarCliente()
+    }
+}
+
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões
@@ -57,6 +65,32 @@ let TipoClient = document.getElementById('inputTipoClient')
 let DanosClient = document.getElementById('inputDanosClient')
 let CPFClient = document.getElementById('inputCPFClient')
 
+
+// Função para manipular o evento da tecla Enter
+function teclaEnter(event) {
+    // se a tecla Enter for pressionada
+    if (event.key === "Enter") {
+        event.preventDefault() // ignorar o comportamento padrão
+        // associar o Enter a busca pelo cliente
+        buscarCliente()
+    }
+}
+
+// Função para restaurar o padrão da tecla Enter (submit)
+function restaurarEnter() {
+    frmClient.removeEventListener('keydown', teclaEnter)
+}
+
+// "Escuta do evento Tecla Enter"
+frmClient.addEventListener('keydown', teclaEnter)
+
+// == Fim - manipulação tecla Enter ==========================
+// ===========================================================
+
+
+// ============================================================
+// == CRUD Create/Update ======================================
+
 // ============================================================
 // == CRUD Create/Update ======================================
 
@@ -66,20 +100,41 @@ frmClient.addEventListener('submit', async (event) => {
     event.preventDefault()
     // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
     console.log(nameClient.value, cpfClient.value, ModeloClient.value, phoneClient.value, PlacaClient.value, TipoClient.value, DanosClient.value)
+    if (id.value === "") {
     //Criar um objeto para armazenar os dados do cliente antes de enviar ao main
-    const client = {
-        nameCli: nameClient.value,
-        cpfCli: cpfClient.value,
-        ModeloCli: ModeloClient.value,
-        phoneCli: phoneClient.value,
-        PlacaCli: PlacaClient.value,
-        TipoCli: TipoClient.value,
-        DanosCli: DanosClient.value,
-        CorCli: CorClient.value,
-    }
+        const client = {
+            nameCli: nameClient.value,
+            cpfCli: cpfClient.value,
+            ModeloCli: ModeloClient.value,
+            phoneCli: phoneClient.value,
+            PlacaCli: PlacaClient.value,
+            TipoCli: TipoClient.value,
+            DanosCli: DanosClient.value,
+            CorCli: CorClient.value
+        }
     // Enviar ao main o objeto client - (Passo 2: fluxo)
     // uso do preload.js
-    api.newClient(client)
+        api.newClient(client)
+    } else {
+        //Criar um objeto para armazenar os dados do cliente antes de enviar ao main (o dev não sabe os dados que serão alterados, portanto enviar todos os dados)
+        const client = {
+            idCli: id.value,
+            nameCli: nameClient.value,
+            cpfCli: cpfClient.value,
+            emailCli: emailClient.value,
+            phoneCli: phoneClient.value,
+            cepCli: cepClient.value,
+            addressCli: addressClient.value,
+            numberCli: numberClient.value,
+            complementCli: complementClient.value,
+            neighborhoodCli: neighborhoodClient.value,
+            cityCli: cityClient.value,
+            ufCli: ufClient.value
+        }
+        // Enviar ao main o objeto client - (Passo 2: fluxo)
+        // uso do preload.js
+        api.updateClient(client)
+    }
 })
 
 // == Fim CRUD Create/Update ==================================
@@ -94,20 +149,30 @@ function buscarCliente() {
     // Passo 1: capturar o nome do cliente
     let name = document.getElementById('searchClient').value
     console.log(name) // teste do passo 1
-    api.searchName(name) // Passo 2: envio do nome ao main
-    // recebimento dos dados do cliente
-    api.renderClient((event, dataClient) => {
-        console.log(dataClient) // teste do passo 5
-        // passo 6 renderizar os dados do cliente no formulário
-        // - Criar um vetor global para manipulação dos dados
-        // - criar uma constante para converter os dados recebidos (string) para o formato JASON (JSON.parse)
-        // usar o laço forEach para percorre o vetor e setar os campos (caixas de texto) do formulário
-        const dadosCliente = JSON.parse(dataClient)
-        // atribuir ao vetor os dados do cliente
-        arrayClient = dadosCliente
-        // extrair os dados do cliente
-        arrayClient.forEach((c) => {
-            nameClient.value = c.nomeCliente,
+
+    // validação de campo obrigatório
+    // se o campo de busca não foi preenchido
+    if (name === "") {
+        // enviar ao main um pedido para alertar o usuário
+        api.validateSearch()
+        foco.focus()
+
+    } else {
+        api.searchName(name) // Passo 2: envio do nome ao main
+        // recebimento dos dados do cliente
+        api.renderClient((event, dataClient) => {
+            console.log(dataClient) // teste do passo 5
+            // passo 6 renderizar os dados do cliente no formulário
+            // - Criar um vetor global para manipulação dos dados
+            // - criar uma constante para converter os dados recebidos (string) para o formato JASON (JSON.parse)
+            // usar o laço forEach para percorre o vetor e setar os campos (caixas de texto) do formulário
+            const dadosCliente = JSON.parse(dataClient)
+            // atribuir ao vetor os dados do cliente
+            arrayClient = dadosCliente
+            // extrair os dados do cliente
+            arrayClient.forEach((c) => {
+                id.value = c._id,
+                nameClient.value = c.nomeCliente,
                 cpfClient.value = c.cpfCliente,
                 ModeloClient.value = c.ModeloCliente,
                 phoneClient.value = c.foneCliente,
@@ -115,11 +180,46 @@ function buscarCliente() {
                 TipoClient.value = c.TipoCliente,
                 DanosClient.value = c.DanosCliente
                 CorClient.value = c.CorCliente
+            // desativar o botão adicionar
+            btnCreate.disabled = true
+            // ativar os botões editar e excluir
+            btnUpdate.disabled = false
+            btnDelete.disabled = false
+            })
         })
-    })
+    }
 }
 
 // == Fim - CRUD Read =========================================
+// ============================================================
+
+
+// setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
+api.setClient((args) => {
+    // criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
+    let campoBusca = document.getElementById('searchClient').value
+    // foco no campo de nome do cliente
+    nameClient.focus()
+    // remover o valor digitado no campo de busca
+    foco.value = ""
+    // preencher o campo de nome do cliente com o nome da busca
+    nameClient.value = campoBusca
+
+})
+
+// == Fim - CRUD Read =========================================
+// ============================================================
+
+
+// ============================================================
+// == CRUD Delete =============================================
+
+function excluirCliente() {
+    console.log(id.value) // Passo 1 (receber do form o id)
+    api.deleteClient(id.value) // Passo 2 (enviar o id ao main)
+}
+
+// == Fim - CRUD Delete =======================================
 // ============================================================
 
 

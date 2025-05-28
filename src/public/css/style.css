@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+body {
+    background-color: #fff1f1;
+}
+
 /* Botões (tela principal) */
 .button img {
     margin: 50px 15px 25px 15px;
@@ -47,4 +51,8 @@ footer p {
 
 footer img {
    padding: 3px;
+}
+
+#buttonos {
+    margin-top: 50px;
 }

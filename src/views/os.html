@@ -40,6 +40,25 @@
                 </div>
             </div>
 
+            <!-- Buscar cliente -->
+            <div class="col-md-4">
+                <label for="inputSearchClient" class="form-label">Buscar Cliente</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="inputSearchClient" spellcheck="false" maxlength="30">
+                    <span class="input-group-text">
+                        <img src="../public/img/search.png" alt="lupa" width="20">
+                    </span>
+                </div>
+                <!-- Lista de sugestões usando classes bootstrap -->
+                <ul id="viewListSuggestion" class="list-group position-absolute w-100"></ul>
+            </div>
+        
+            <!-- Id -->
+            <div class="col-md-3">
+                <label for="inputIdClient" class="form-label">Id do cliente</label>
+                <input type="text" class="form-control" id="inputIdClient" spellcheck="false" maxlength="15" disabled>
+            </div>
+
             <!-- Nome -->
             <div class="col-md-5">
                 <label for="inputNameClient" class="form-label">Nome</label>
@@ -55,14 +74,8 @@
 
             <!-- Placa -->
             <div class="col-md-4">
-                <label for="inputPlacaClient" class="form-label">CPF</label>
+                <label for="inputPlacaClient" class="form-label">Placa do Carro</label>
                 <input type="text" class="form-control" id="inputPlacaClient" spellcheck="false" maxlength="15" disabled>
-            </div>
-
-            <!-- CPF -->
-            <div class="col-md-4">
-                <label for="inputCPFClient" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
             </div>
 
             <!-- Linha -->
@@ -80,15 +93,15 @@
                     <option>Cancelada</option>
                 </select>
             </div>
-            <!--
-            <div class="mb-3">
-                <label class="form-label">Equipamento</label>
-                <input type="text" class="form-control" id="txtOsEquip">
+            <div class="col-md-3">
+                <label class="form-label">Tempo estacionado</label>
+                <input type="text" class="form-control" id="txtOsTempo">
             </div>
-            <div class="mb-3">
-                <label class="form-label">Defeito</label>
-                <input type="text" class="form-control" id="txtOsDef">
+            <div class="col-md-3">
+                <label class="form-label">Valor</label>
+                <input type="text" class="form-control" id="txtOsValor">
             </div>
+             <!--
             <div class="mb-3">
                 <label class="form-label">Serviço</label>
                 <input type="text" class="form-control" id="txtOsServ">
@@ -105,16 +118,19 @@
             </div>
         -->
             <div class="d-flex justify-content-center gap-1">
-                <button type="button" class="btn btn-success">Gerar OS</button>
-                <button type="button" class="btn btn-primary">Buscar OS</button>
-                <button type="button" class="btn btn-warning">Editar OS</button>
-                <button type="button" class="btn btn-danger">Excluir OS</button>
-                <button type="button" class="btn btn-secondary">Imprimir OS</button>
+                <button type="button" class="btn btn-success" id="buttonos">Gerar OS</button>
+                <button type="button" class="btn btn-primary" id="buttonos">Buscar OS</button>
+                <button type="button" class="btn btn-warning" id="buttonos">Editar OS</button>
+                <button type="button" class="btn btn-danger" id="buttonos">Excluir OS</button>
+                <button type="button" class="btn btn-secondary" id="buttonos">Imprimir OS</button>
         </form>
     </div>
 
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
+
+    <script src="rendererOS.js"></script>
+
 </body>
 
 </html>

@@ -8,7 +8,7 @@ const { model, Schema } = require('mongoose')
 
 // criação da estrutura da coleção Clientes
 const clienteSchema = new Schema({
-    nomeCliente: {
+    nameCliente: {
         type: String
     },    
     cpfCliente: {
@@ -19,7 +19,7 @@ const clienteSchema = new Schema({
     ModeloCliente: {
         type: String
     },
-    foneCliente: {
+    PhoneCliente: {
         type: String
     },
     PlacaCliente: {
@@ -33,7 +33,7 @@ const clienteSchema = new Schema({
     },
     CorCliente: {
         type: String  
-    }
+    },
 }, {versionKey: false}) //não versionar os dados armazenados
 
 // exportar para o main o modelo de dados
