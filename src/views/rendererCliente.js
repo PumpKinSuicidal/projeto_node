@@ -37,14 +37,6 @@ let arrayClient = []
 // a constante foco obtem o elemento html (input) identificado como 'searchClient'
 const foco = document.getElementById('searchClient')
 
-
-function teclaEnter(event) {
-    if (event.key === "Enter") {
-        event.preventDefault()
-        buscarCliente()
-    }
-}
-
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões
@@ -57,14 +49,21 @@ document.addEventListener('DOMContentLoaded', () => {
 //captura dos dados dos inputs do formulário (Passo 1: Fluxo)
 let frmClient = document.getElementById('frmClient')
 let nameClient = document.getElementById('inputNameClient')
-let PlacaClient = document.getElementById('inputPlacaClient')
-let ModeloClient = document.getElementById('inputModeloClient')
+let cpfClient = document.getElementById('inputCPFClient')
+let emailClient = document.getElementById('inputEmailClient')
 let phoneClient = document.getElementById('inputPhoneClient')
-let CorClient = document.getElementById('inputCorClient')
-let TipoClient = document.getElementById('inputTipoClient')
-let DanosClient = document.getElementById('inputDanosClient')
-let CPFClient = document.getElementById('inputCPFClient')
+let cepClient = document.getElementById('inputCEPClient')
+let addressClient = document.getElementById('inputAddressClient')
+let numberClient = document.getElementById('inputNumberClient')
+let complementClient = document.getElementById('inputComplementClient')
+let neighborhoodClient = document.getElementById('inputNeighborhoodClient')
+let cityClient = document.getElementById('inputCityClient')
+let ufClient = document.getElementById('inputUFClient')
+// captura do id do cliente (usado no delete e update)
+let id = document.getElementById('idClient')
 
+// ==========================================================
+// == Manipulação da tecla Enter ============================
 
 // Função para manipular o evento da tecla Enter
 function teclaEnter(event) {
@@ -91,29 +90,29 @@ frmClient.addEventListener('keydown', teclaEnter)
 // ============================================================
 // == CRUD Create/Update ======================================
 
-// ============================================================
-// == CRUD Create/Update ======================================
-
 //Evento associado ao botão submit (uso das validações do html)
 frmClient.addEventListener('submit', async (event) => {
     //evitar o comportamento padrão do submit que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
-    console.log(nameClient.value, cpfClient.value, ModeloClient.value, phoneClient.value, PlacaClient.value, TipoClient.value, DanosClient.value)
+    console.log(nameClient.value, cpfClient.value, emailClient.value, phoneClient.value, cepClient.value, addressClient.value, numberClient.value, complementClient.value, neighborhoodClient.value, cityClient.value, ufClient.value, id.value)
     if (id.value === "") {
-    //Criar um objeto para armazenar os dados do cliente antes de enviar ao main
+        //Criar um objeto para armazenar os dados do cliente antes de enviar ao main
         const client = {
             nameCli: nameClient.value,
             cpfCli: cpfClient.value,
-            ModeloCli: ModeloClient.value,
+            emailCli: emailClient.value,
             phoneCli: phoneClient.value,
-            PlacaCli: PlacaClient.value,
-            TipoCli: TipoClient.value,
-            DanosCli: DanosClient.value,
-            CorCli: CorClient.value
+            cepCli: cepClient.value,
+            addressCli: addressClient.value,
+            numberCli: numberClient.value,
+            complementCli: complementClient.value,
+            neighborhoodCli: neighborhoodClient.value,
+            cityCli: cityClient.value,
+            ufCli: ufClient.value
         }
-    // Enviar ao main o objeto client - (Passo 2: fluxo)
-    // uso do preload.js
+        // Enviar ao main o objeto client - (Passo 2: fluxo)
+        // uso do preload.js
         api.newClient(client)
     } else {
         //Criar um objeto para armazenar os dados do cliente antes de enviar ao main (o dev não sabe os dados que serão alterados, portanto enviar todos os dados)
@@ -172,27 +171,28 @@ function buscarCliente() {
             // extrair os dados do cliente
             arrayClient.forEach((c) => {
                 id.value = c._id,
-                nameClient.value = c.nomeCliente,
-                cpfClient.value = c.cpfCliente,
-                ModeloClient.value = c.ModeloCliente,
-                phoneClient.value = c.foneCliente,
-                PlacaClient.value = c.PlacaCliente,
-                TipoClient.value = c.TipoCliente,
-                DanosClient.value = c.DanosCliente
-                CorClient.value = c.CorCliente
-            // desativar o botão adicionar
-            btnCreate.disabled = true
-            // ativar os botões editar e excluir
-            btnUpdate.disabled = false
-            btnDelete.disabled = false
+                    nameClient.value = c.nomeCliente,
+                    cpfClient.value = c.cpfCliente,
+                    emailClient.value = c.emailCliente,
+                    phoneClient.value = c.foneCliente,
+                    cepClient.value = c.cepCliente,
+                    addressClient.value = c.logradouroCliente,
+                    numberClient.value = c.numeroCliente,
+                    complementClient.value = c.complementoCliente,
+                    neighborhoodClient.value = c.bairroCliente,
+                    cityClient.value = c.cidadeCliente,
+                    ufClient.value = c.ufCliente
+                // desativar o botão adicionar
+                btnCreate.disabled = true
+                // ativar os botões editar e excluir
+                btnUpdate.disabled = false
+                btnDelete.disabled = false
+                // restaurar tecla Enter
+               // restaurarEnter()
             })
         })
     }
 }
-
-// == Fim - CRUD Read =========================================
-// ============================================================
-
 
 // setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
 api.setClient((args) => {
@@ -204,7 +204,8 @@ api.setClient((args) => {
     foco.value = ""
     // preencher o campo de nome do cliente com o nome da busca
     nameClient.value = campoBusca
-
+    // restaurar tecla Enter
+    restaurarEnter()
 })
 
 // == Fim - CRUD Read =========================================

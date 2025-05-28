@@ -12,6 +12,11 @@ body {
     cursor: pointer;
 }
 
+/* ocultar o campo id do cliente */
+#idClient {
+    display: none;
+}
+
 /* Botão reset */
 #btnReset {
     width: 48px;
@@ -55,4 +60,44 @@ footer img {
 
 #buttonos {
     margin-top: 50px;
+}
+
+
+/* Lista de sugestões OS */
+#viewListSuggestion {
+    z-index: 2;
+    max-width: 301px;
+}
+
+#viewListSuggestion li {
+    background-color: #E0F0FF;
+}
+
+/* Dados do cliente - OS */
+#inputSearchClient,
+#viewListSuggestion,
+#inputIdClient,
+#inputNameClient,
+#inputPhoneClient {
+    font-size: 0.9em;
+}
+
+/* Botão Buscar OS */
+#btnBuscaOS {
+    margin-left: 370px;
+}
+
+/* Remove as setas em todos os navegadores */
+input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    /* Firefox */
+    -webkit-appearance: none;
+    /* Safari e Chrome */
+}
+
+/* Remove as setas do Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    display: none;
 }

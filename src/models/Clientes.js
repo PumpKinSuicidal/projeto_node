@@ -8,7 +8,7 @@ const { model, Schema } = require('mongoose')
 
 // criação da estrutura da coleção Clientes
 const clienteSchema = new Schema({
-    nameCliente: {
+    nomeCliente: {
         type: String
     },    
     cpfCliente: {
@@ -16,23 +16,32 @@ const clienteSchema = new Schema({
         unique: true,
         index: true
     },
-    ModeloCliente: {
+    emailCliente: {
         type: String
     },
-    PhoneCliente: {
+    foneCliente: {
         type: String
     },
-    PlacaCliente: {
+    cepCliente: {
         type: String        
     },
-    TipoCliente: {
+    logradouroCliente: {
         type: String  
     },
-    DanosCliente: {
+    numeroCliente: {
         type: String  
     },
-    CorCliente: {
+    complementoCliente: {
         type: String  
+    },
+    bairroCliente: {
+        type: String 
+    },
+    cidadeCliente: {
+        type: String 
+    },
+    ufCliente: {
+        type: String 
     },
 }, {versionKey: false}) //não versionar os dados armazenados
 

@@ -4,9 +4,16 @@
 const input = document.getElementById('inputSearchClient')
 const suggestionList = document.getElementById('viewListSuggestion')
 let idClient = document.getElementById('inputIdClient')
+// Disparar ação de busca do nome e telefone do cliente quando o inputIdClient for preenchido (change - usado quando o campo input é desativado)
+idClient.addEventListener('change', () => {
+    if (idClient.value !== "") {
+        console.log(idClient.value)
+        api.searchIdClient(idClient.value)
+    }
+})
+
 let nameClient = document.getElementById('inputNameClient')
 let phoneClient = document.getElementById('inputPhoneClient')
-let PlacaClient = document.getElementById('inputPlacaClient')
 
 let arrayClients = []
 
@@ -40,7 +47,6 @@ input.addEventListener('input', () => {
                 idClient.value = c._id
                 nameClient.value = c.nomeCliente
                 phoneClient.value = c.foneCliente
-                PlacaClient.value = c.PlacaCliente
                 input.value = ""
                 suggestionList.innerHTML = ""
             })
@@ -66,6 +72,13 @@ document.addEventListener('click', (e) => {
 // == Fim - busca avançada =====================================
 // =============================================================
 
+// Iniciar a janela OS alterando as propriedades de alguns elementos
+document.addEventListener('DOMContentLoaded', () => {
+    // Desativar os botões
+    btnUpdate.disabled = true
+    btnDelete.disabled = true
+})
+
 // criar um vetor para manipulação dos dados da OS
 let arrayOS = []
 
@@ -75,12 +88,15 @@ let statusOS = document.getElementById('inputStatus')
 let computer = document.getElementById('inputComputer')
 let serial = document.getElementById('inputSerial')
 let problem = document.getElementById('inputProblem')
+let obs = document.getElementById('inputObs')
 let specialist = document.getElementById('inputSpecialist')
 let diagnosis = document.getElementById('inputDiagnosis')
 let parts = document.getElementById('inputParts')
 let total = document.getElementById('inputTotal')
-// captura da OS (CRUD Delete e Update)
-let os = document.getElementById('inputOS')
+// captura do id da OS (CRUD Delete e Update)
+let idOS = document.getElementById('inputOS')
+// captura do id do campo data
+let dateOS = document.getElementById('inputData')
 
 
 // ============================================================
@@ -95,14 +111,20 @@ frmOS.addEventListener('submit', async (event) => {
         api.validateClient()
     } else {
         // Teste importante (recebimento dos dados do formuláro - passo 1 do fluxo)
-        console.log(os.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, specialist.value, diagnosis.value, parts.value, total.value)
-        if (os.value === "") {
+        console.log(idOS.value, idClient.value, statusOS.value, computer.value, serial.value, problem.value, obs.value, specialist.value, diagnosis.value, parts.value, total.value)
+        if (idOS.value === "") {
             //Gerar OS
             //Criar um objeto para armazenar os dados da OS antes de enviar ao main
             const os = {
                 idClient_OS: idClient.value,
                 stat_OS: statusOS.value,
-                tempo_OS: computer.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                obs_OS: obs.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
                 total_OS: total.value
             }
             // Enviar ao main o objeto os - (Passo 2: fluxo)
@@ -110,7 +132,24 @@ frmOS.addEventListener('submit', async (event) => {
             api.newOS(os)
         } else {
             //Editar OS
-
+            //Gerar OS
+            //Criar um objeto para armazenar os dados da OS antes de enviar ao main
+            const os = {
+                id_OS: idOS.value,
+                idClient_OS: idClient.value,
+                stat_OS: statusOS.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                obs_OS: obs.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
+                total_OS: total.value
+            }
+            // Enviar ao main o objeto os - (Passo 2: fluxo)
+            // uso do preload.js
+            api.updateOS(os)
         }
     }
 })
@@ -118,16 +157,6 @@ frmOS.addEventListener('submit', async (event) => {
 // == Fim CRUD Create/Update ==================================
 // ============================================================
 
-
-// =============================================================
-// == Busca OS =================================================
-
-function findOS() {
-    api.searchOS()
-}
-
-// == Fim - Busca OS ===========================================
-// =============================================================
 
 // ============================================================
 // == Buscar OS - CRUD Read ===================================
@@ -153,17 +182,63 @@ api.renderOS((event, dataOS) => {
     })
     dateOS.value = formatada
     idClient.value = os.idCliente
+    // disparar ação de busca do cliente pelo id
+    idClient.dispatchEvent(new Event('change'))    
     statusOS.value = os.statusOS
     computer.value = os.computador
     serial.value = os.serie
     problem.value = os.problema
+    obs.value = os.observacao
     specialist.value = os.tecnico
     diagnosis.value = os.diagnostico
     parts.value = os.pecas
     total.value = os.valor
+    // desativar o botão adicionar
+    btnCreate.disabled = true
+    // ativar os botões editar e excluir
+    btnUpdate.disabled = false
+    btnDelete.disabled = false
+})
+
+// receber dados do cliente para preenchimento da OS
+api.renderIdClient((event, dataClient) => {
+    console.log(dataClient)
+    /*
+    const dadosCliente = JSON.parse(dataClient)
+    // atribuir ao vetor os dados do cliente
+    arrayClient = dadosCliente
+    // extrair os dados do cliente
+    arrayClient.forEach((c) => {
+        nameClient.value = c.nomeCliente,
+            phoneClient.value = c.foneCliente
+    })
+            */
 })
 
 // == Fim - Buscar OS - CRUD Read =============================
+// ============================================================
+
+
+// ============================================================
+// == CRUD Delete =============================================
+
+function removeOS() {
+    console.log(idOS.value) // Passo 1 (receber do form o id da OS)
+    api.deleteOS(idOS.value) // Passo 2 (enviar o id da OS ao main)
+}
+
+// == Fim - CRUD Delete =======================================
+// ============================================================
+
+
+// ============================================================
+// == Imprimir OS ============================================= 
+
+function generateOS() {
+    api.printOS()
+}
+
+// == Fm - Imprimir OS ======================================== 
 // ============================================================
 
 
@@ -182,4 +257,5 @@ api.resetForm((args) => {
 
 // == Fim - reset form ========================================
 // ============================================================
+
 
